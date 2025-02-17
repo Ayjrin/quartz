@@ -1,6 +1,6 @@
 import { QuartzComponentConstructor, QuartzComponentProps } from "./types"
 
-function NewsletterSignup() {
+const NewsletterSignupComponent = ({ cfg }: QuartzComponentProps) => {
   return (
     <section class="newsletter-signup">
       <div class="container">
@@ -43,7 +43,7 @@ function NewsletterSignup() {
   )
 }
 
-NewsletterSignup.css = `
+NewsletterSignupComponent.css = `
 .newsletter-signup {
   background: var(--light);
 }
@@ -171,7 +171,7 @@ NewsletterSignup.css = `
 }
 `
 
-NewsletterSignup.afterDOMLoaded = `
+NewsletterSignupComponent.afterDOMLoaded = `
 document.addEventListener('nav', function() {
   const form = document.getElementById('newsletter-form')
   const emailInput = document.getElementById('signup-email')
@@ -219,4 +219,4 @@ document.addEventListener('nav', function() {
 })
 `
 
-export default (() => NewsletterSignup) satisfies QuartzComponentConstructor
+export default (() => NewsletterSignupComponent) satisfies QuartzComponentConstructor
