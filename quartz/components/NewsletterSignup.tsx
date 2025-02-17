@@ -1,8 +1,8 @@
 import { QuartzComponentConstructor, QuartzComponentProps } from "./types"
 
-function NewsletterSignup({ displayClass }: QuartzComponentProps) {
+function NewsletterSignup() {
   return (
-    <section class={`newsletter-signup ${displayClass ?? ""}`}>
+    <section class="newsletter-signup">
       <div class="container">
         <div class="signup-card">
           <div class="window-controls">
