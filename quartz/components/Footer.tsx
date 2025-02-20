@@ -2,7 +2,7 @@ import { QuartzComponent, QuartzComponentConstructor, QuartzComponentProps } fro
 import style from "./styles/footer.scss"
 import { version } from "../../package.json"
 import { i18n } from "../i18n"
-import NewsletterSignup from "./NewsletterSignup"
+import { NewsletterSignupComponent } from "./NewsletterSignup"
 
 interface Options {
   links: Record<string, string>
@@ -14,7 +14,7 @@ export default ((opts?: Options) => {
     const links = opts?.links ?? []
     return (
       <footer class={`${displayClass ?? ""}`}>
-        <NewsletterSignup />
+        <NewsletterSignupComponent cfg={cfg} />
         <ul>
           {Object.entries(links).map(([text, link]) => (
             <li>

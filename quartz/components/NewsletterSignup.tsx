@@ -249,4 +249,5 @@ function initializeNewsletter() {
 }
 `
 
+export { NewsletterSignupComponent }
 export default (() => NewsletterSignupComponent) satisfies QuartzComponentConstructor
