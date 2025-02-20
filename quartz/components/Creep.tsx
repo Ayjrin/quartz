@@ -3,7 +3,11 @@
 import { Stagehand } from '@browserbasehq/stagehand'
 import { z } from 'zod'
 
-export async function YoinkName(email: string): Promise<string> {
+interface NameResult {
+  first_name: string | null
+}
+
+export async function YoinkName(email: string): Promise<NameResult> {
   try {
     // First try OpenAI to extract name from email
     const openaiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -25,7 +29,7 @@ export async function YoinkName(email: string): Promise<string> {
     const aiGuess = openaiData.choices[0].message.content.trim()
     
     if (aiGuess !== "UNCERTAIN") {
-      return aiGuess
+      return { first_name: aiGuess }
     }
     
     // If AI is uncertain, try browser search
@@ -81,7 +85,7 @@ export async function YoinkName(email: string): Promise<string> {
           
           if (extractedData.confidence === 'HIGH') {
             await stagehand.close()
-            return extractedData.firstName
+            return { first_name: extractedData.firstName }
           }
         }
       } catch (err) {
@@ -92,12 +96,16 @@ export async function YoinkName(email: string): Promise<string> {
     
     await stagehand.close()
     
-    // If no name found, return email prefix
-    return email.split('@')[0].replace(/[^a-zA-Z]/g, ' ').trim()
+    // If no name found, return email prefix as first_name
+    return { 
+      first_name: email.split('@')[0].replace(/[^a-zA-Z]/g, ' ').trim() 
+    }
     
   } catch (error) {
     console.error('Error in YoinkName:', error)
     // Fallback to email prefix
-    return email.split('@')[0].replace(/[^a-zA-Z]/g, ' ').trim()
+    return { 
+      first_name: email.split('@')[0].replace(/[^a-zA-Z]/g, ' ').trim() 
+    }
   }
 }
