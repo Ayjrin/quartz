@@ -257,4 +257,5 @@ document.querySelector('.close-button').addEventListener('click', function() {
 })
 `
 
+export { NewsletterSignupComponent }
 export default (() => NewsletterSignupComponent) satisfies QuartzComponentConstructor
