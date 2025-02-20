@@ -1,31 +1,42 @@
-import { QuartzComponent, QuartzComponentConstructor, QuartzComponentProps } from "./types"
+import { QuartzComponent, QuartzComponentProps } from "./types"
 import style from "./styles/footer.scss"
-import { version } from "../../package.json"
-import { i18n } from "../i18n"
-import { NewsletterSignupComponent } from "./NewsletterSignup"
+
+
+
+// Use a static version if package.json import fails
+const version = "4.0.0"
 
 interface Options {
   links: Record<string, string>
 }
 
-export default ((opts?: Options) => {
-  const Footer: QuartzComponent = ({ displayClass, cfg }: QuartzComponentProps) => {
-    const year = new Date().getFullYear()
-    const links = opts?.links ?? []
-    return (
-      <footer class={`${displayClass ?? ""}`}>
-        <NewsletterSignupComponent cfg={cfg} />
-        <ul>
-          {Object.entries(links).map(([text, link]) => (
-            <li>
-              <a href={link}>{text}</a>
-            </li>
-          ))}
-        </ul>
-      </footer>
-    )
-  }
+const defaultOptions: Options = {
+  links: {
+    GitHub: "https://github.com/jackyzha0/quartz",
+    "Discord Community": "https://discord.gg/cRFFHYye7t",
+  },
+}
 
-  Footer.css = style
-  return Footer
-}) satisfies QuartzComponentConstructor
+export const Footer: QuartzComponent = ({ displayClass }: QuartzComponentProps) => {
+  const year = new Date().getFullYear()
+  const links = defaultOptions.links
+  
+  return (
+    <footer class={`${displayClass ?? ""}`}>
+      <hr />
+      <p>
+        Created with <a href="https://quartz.jzhao.xyz/">Quartz v{version}</a>, &copy; {year}
+      </p>
+      <ul>
+        {Object.entries(links).map(([text, link]) => (
+          <li>
+            <a href={link}>{text}</a>
+          </li>
+        ))}
+      </ul>
+    </footer>
+  )
+}
+
+Footer.css = style
+export default Footer

@@ -1,29 +1,38 @@
-import { ComponentType, JSX } from "preact"
-import { StaticResources } from "../util/resources"
-import { QuartzPluginData } from "../plugins/vfile"
-import { GlobalConfiguration } from "../cfg"
+import { ComponentType } from "preact"
+import { QuartzConfig } from "../cfg"
 import { Node } from "hast"
 import { BuildCtx } from "../util/ctx"
+import { FilePath } from "../util/path"
 
-export type QuartzComponentProps = {
+export interface FilePluginData {
+  frontmatter: { [key: string]: any }
+  slug: string
+  description?: string
+  links: FilePath[]
+}
+
+export interface QuartzComponentProps {
   ctx: BuildCtx
-  externalResources: StaticResources
-  fileData: QuartzPluginData
-  cfg: GlobalConfiguration
+  cfg: QuartzConfig
+  fileData: FilePluginData
   children: (QuartzComponent | JSX.Element)[]
   tree: Node
-  allFiles: QuartzPluginData[]
+  allFiles: FilePluginData[]
   displayClass?: "mobile-only" | "desktop-only"
-} & JSX.IntrinsicAttributes & {
-    [key: string]: any
+  externalResources: {
+    css: string[]
+    js: {
+      src: string
+      loadTime: "beforeDOMReady" | "afterDOMReady"
+      contentType?: string
+    }[]
   }
+}
 
 export type QuartzComponent = ComponentType<QuartzComponentProps> & {
-  css?: string
+  css?: string | { [key: string]: string }
   beforeDOMLoaded?: string
   afterDOMLoaded?: string
 }
 
-export type QuartzComponentConstructor<Options extends object | undefined = undefined> = (
-  opts: Options,
-) => QuartzComponent
+export type QuartzComponentConstructor = () => QuartzComponent

@@ -1,7 +1,5 @@
-'use server'
-
+import { QuartzComponent, QuartzComponentProps } from "./types"
 import { Stagehand } from '@browserbasehq/stagehand'
-import { z } from 'zod'
 
 interface NameResult {
   first_name: string | null
@@ -109,3 +107,26 @@ export async function YoinkName(email: string): Promise<NameResult> {
     }
   }
 }
+
+export function extractNameFromEmail(email: string): string {
+  const parts = email.split('@')
+  if (parts.length !== 2) return email
+  
+  const name = parts[0]
+    .replace(/[._-]/g, ' ')
+    .replace(/\b\w/g, c => c.toUpperCase())
+    .trim()
+  
+  return name || email
+}
+
+export const Creep: QuartzComponent = ({ displayClass }: QuartzComponentProps) => {
+  return (
+    <div class={`creep ${displayClass ?? ""}`}>
+      <div id="creep-output"></div>
+    </div>
+  )
+}
+
+Creep.css = ""
+export default Creep

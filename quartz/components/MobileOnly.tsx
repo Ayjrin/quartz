@@ -1,18 +1,15 @@
-import { QuartzComponent, QuartzComponentConstructor, QuartzComponentProps } from "./types"
+import { QuartzComponent, QuartzComponentConstructor, QuartzComponentProps, QuartzComponentWrapper } from "./types"
 
-export default ((component?: QuartzComponent) => {
-  if (component) {
-    const Component = component
-    const MobileOnly: QuartzComponent = (props: QuartzComponentProps) => {
-      return <Component displayClass="mobile-only" {...props} />
-    }
-
-    MobileOnly.displayName = component.displayName
-    MobileOnly.afterDOMLoaded = component?.afterDOMLoaded
-    MobileOnly.beforeDOMLoaded = component?.beforeDOMLoaded
-    MobileOnly.css = component?.css
-    return MobileOnly
-  } else {
-    return () => <></>
+const MobileOnly: QuartzComponentWrapper = (component) => {
+  const MobileOnlyComponent: QuartzComponent = (props) => {
+    return component({ ...props, displayClass: "mobile-only" })
   }
-}) satisfies QuartzComponentConstructor
+
+  MobileOnlyComponent.css = component.css
+  MobileOnlyComponent.beforeDOMLoaded = component.beforeDOMLoaded
+  MobileOnlyComponent.afterDOMLoaded = component.afterDOMLoaded
+
+  return MobileOnlyComponent
+}
+
+export default MobileOnly

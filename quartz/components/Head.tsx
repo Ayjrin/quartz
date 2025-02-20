@@ -1,48 +1,47 @@
-import { i18n } from "../i18n"
-import { FullSlug, joinSegments, pathToRoot } from "../util/path"
-import { CSSResourceToStyleElement, JSResourceToScriptElement } from "../util/resources"
-import { googleFontHref } from "../util/theme"
-import { QuartzComponent, QuartzComponentConstructor, QuartzComponentProps } from "./types"
 
-const Head: QuartzComponent = ({ cfg, fileData, externalResources }: QuartzComponentProps) => {
-  const title = fileData.frontmatter?.title ?? i18n(cfg.locale).propertyDefaults.title
-  const description = fileData.description?.trim() ?? i18n(cfg.locale).propertyDefaults.description
-  const { css, js } = externalResources
+import { QuartzComponent, QuartzComponentProps } from "./types"
 
-  const url = new URL(`https://${cfg.baseUrl ?? "example.com"}`)
-  const path = url.pathname as FullSlug
+interface HeadProps extends QuartzComponentProps {
+  title?: string
+  description?: string
+  slug?: string
+  image?: string
+}
 
-  const iconPath = joinSegments(pathToRoot(path), "static/icon.png")
-  const ogImagePath = `https://${cfg.baseUrl}/static/og-image.webp`
+export const Head: QuartzComponent = ({ title, description, slug, image, cfg, fileData }: HeadProps) => {
+  const baseUrl = cfg.configuration.baseUrl ?? ""
+  const pageTitle = title ? `${title} | ${cfg.configuration.pageTitle}` : cfg.configuration.pageTitle
+  const pageDescription = description ?? fileData?.description ?? `${cfg.configuration.pageTitle} - Digital Garden`
+  const displayImage = image ?? `/static/og-image.png`
+  const canonicalUrl = slug ? `${baseUrl}/${slug}` : baseUrl
 
   return (
     <head>
-      <title>{title}</title>
+      <title>{pageTitle}</title>
       <meta charSet="utf-8" />
+      {/* Meta tags */}
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <meta property="og:title" content={title} />
-      <meta property="og:description" content={description} />
-      {cfg.baseUrl && <meta property="og:image" content={ogImagePath} />}
+      <meta property="og:title" content={pageTitle} />
+      <meta property="og:description" content={pageDescription} />
+      {displayImage && <meta property="og:image" content={`${baseUrl}${displayImage}`} />}
       <meta property="og:width" content="1200" />
       <meta property="og:height" content="675" />
-      <link rel="icon" href={iconPath} />
-      <meta name="description" content={description} />
+      <link rel="icon" href={`${baseUrl}/static/icon.png`} />
+      <meta name="description" content={pageDescription} />
       <meta name="generator" content="Quartz" />
-      <link rel="preconnect" href="https://fonts.googleapis.com" />
-      <link rel="preconnect" href="https://fonts.gstatic.com" />
-      {cfg.theme.fontOrigin === "googleFonts" && (
-        <>
-          <link rel="preload" href={googleFontHref(cfg.theme)} as="style" />
-          <link href={googleFontHref(cfg.theme)} rel="stylesheet" />
-        </>
-      )}
-      {css.map((resource) => CSSResourceToStyleElement(resource, true))}
-      {js
-        .filter((resource) => resource.loadTime === "beforeDOMReady")
-        .map((res) => JSResourceToScriptElement(res, true))}
-      <link href="/styles/tailwind.css" rel="stylesheet" type="text/css" spa-preserve />
+      <link rel="canonical" href={canonicalUrl} />
+      
+      {/* Styles */}
+      <link rel="stylesheet" href={`${baseUrl}/styles/custom.css`} />
+      <link rel="stylesheet" href={`${baseUrl}/styles/base.css`} />
+      <link rel="stylesheet" href={`${baseUrl}/styles/theme.css`} />
+      
+      {/* Scripts */}
+      <script defer src={`${baseUrl}/prism.js`}></script>
+      <script defer src={`${baseUrl}/scripts.js`}></script>
     </head>
   )
 }
 
-export default (() => Head) satisfies QuartzComponentConstructor
+Head.css = ""
+export default Head

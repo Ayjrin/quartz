@@ -34,11 +34,32 @@
     "quartz": "./quartz/bootstrap-cli.mjs"
   },
   "dependencies": {
+    "@browserbasehq/stagehand": "^1.12.0",
     "@supabase/supabase-js": "^2.39.3"
   },
   "devDependencies": {
+    "@types/cli-spinner": "^0.2.3",
+    "@types/github-slugger": "^1.3.0",
+    "@types/hast": "^3.0.4",
+    "@types/node": "^22.13.4",
+    "@types/pretty-time": "^1.1.5",
+    "@types/rfdc": "^1.1.0",
+    "@types/rimraf": "^3.0.2",
+    "@types/source-map-support": "^0.5.10",
+    "@types/workerpool": "^6.4.7",
+    "async-mutex": "^0.5.0",
     "autoprefixer": "^10.4.17",
+    "del": "^8.0.0",
+    "github-slugger": "^2.0.0",
+    "globby": "^14.1.0",
+    "hast-util-to-jsx-runtime": "^2.3.3",
     "postcss": "^8.4.35",
-    "tailwindcss": "^3.4.1"
+    "preact": "^10.26.2",
+    "pretty-time": "^1.1.0",
+    "reading-time": "^1.5.0",
+    "rfdc": "^1.4.1",
+    "satori": "^0.12.1",
+    "tailwindcss": "^3.4.1",
+    "vite": "^6.1.1"
   }
 }

@@ -1,10 +1,9 @@
-import { Date, getDate } from "./Date"
+import { Date as DateComponent } from "./Date"
 import { QuartzComponentConstructor, QuartzComponentProps } from "./types"
-import readingTime from "reading-time"
 import { classNames } from "../util/lang"
-import { i18n } from "../i18n"
 import { JSX } from "preact"
 import style from "./styles/contentMeta.scss"
+import { ValidLocale } from "../i18n"
 
 interface ContentMetaOptions {
   /**
@@ -24,35 +23,44 @@ export default ((opts?: Partial<ContentMetaOptions>) => {
   const options: ContentMetaOptions = { ...defaultOptions, ...opts }
 
   function ContentMetadata({ cfg, fileData, displayClass }: QuartzComponentProps) {
-    const text = fileData.text
+    const wordCount = fileData.frontmatter?.wordCount ?? 0
+    const segments: (string | JSX.Element)[] = []
+    const locale = (cfg.configuration.locale ?? "en-US") as ValidLocale
 
-    if (text) {
-      const segments: (string | JSX.Element)[] = []
-
-      if (fileData.dates) {
-        segments.push(<Date date={getDate(cfg, fileData)!} locale={cfg.locale} />)
+    if (fileData.frontmatter?.date) {
+      try {
+        const date = new Date(fileData.frontmatter.date)
+        if (!isNaN(date.getTime())) {
+          segments.push(<DateComponent date={date} locale={locale} />)
+        }
+      } catch (e) {
+        console.warn("Invalid date in frontmatter:", fileData.frontmatter.date)
       }
+    }
 
-      // Display reading time if enabled
-      if (options.showReadingTime) {
-        const { minutes, words: _words } = readingTime(text)
-        const displayedTime = i18n(cfg.locale).components.contentMeta.readingTime({
-          minutes: Math.ceil(minutes),
-        })
-        segments.push(<span>{displayedTime}</span>)
+    // Show reading time if enabled and we have a word count
+    if (options.showReadingTime && wordCount > 0) {
+      const readingTime = Math.ceil(wordCount / 200) // Assuming average reading speed of 200 words per minute
+      segments.push(`${readingTime} min read`)
+    }
+
+    // Handle commas between segments
+    const segmentsWithCommas = segments.reduce<(string | JSX.Element)[]>((acc, segment, idx) => {
+      if (idx === 0) return [segment]
+      if (options.showComma) {
+        return [...acc, ", ", segment]
+      } else {
+        return [...acc, " • ", segment]
       }
+    }, [])
 
-      return (
-        <p show-comma={options.showComma} class={classNames(displayClass, "content-meta")}>
-          {segments}
-        </p>
-      )
-    } else {
+    if (segments.length === 0) {
       return null
     }
+
+    return <p class={classNames(displayClass, "content-meta")}>{segmentsWithCommas}</p>
   }
 
   ContentMetadata.css = style
-
   return ContentMetadata
 }) satisfies QuartzComponentConstructor

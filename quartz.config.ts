@@ -1,10 +1,6 @@
 import { QuartzConfig } from "./quartz/cfg"
 import * as Plugin from "./quartz/plugins"
 import { Tailwind } from "./quartz/plugins/emitters/tailwind"
-import postcss from 'postcss'
-import tailwindcss from 'tailwindcss'
-import autoprefixer from 'autoprefixer'
-import fs from 'fs/promises'
 
 /**
  * Quartz 4.0 Configuration
@@ -13,21 +9,16 @@ import fs from 'fs/promises'
  */
 const config: QuartzConfig = {
   configuration: {
-    pageTitle: "Ayjrin",
-    pageTitleSuffix: "",
+    pageTitle: "🌱 Quartz 4.0",
     enableSPA: true,
     enablePopovers: true,
     analytics: {
       provider: "plausible",
     },
-    locale: "en-US",
     baseUrl: "quartz.jzhao.xyz",
     ignorePatterns: ["private", "templates", ".obsidian"],
     defaultDateType: "created",
-    generateSocialImages: false,
     theme: {
-      fontOrigin: "googleFonts",
-      cdnCaching: true,
       typography: {
         header: "Schibsted Grotesk",
         body: "Source Sans Pro",
@@ -42,22 +33,21 @@ const config: QuartzConfig = {
           dark: "#2b2b2b",
           secondary: "#284b63",
           tertiary: "#84a59d",
-          highlight: "rgba(143, 159, 169, 0.15)",
-          textHighlight: "#fff23688",
+          highlight: "#fff23688"
         },
         darkMode: {
-          light: "#131821",          // Deep navy background (main page bg)
-          lightgray: "#1F2530",      // Slightly lighter panel/section background
-          gray: "#4A4F5D",           // Midtone gray for borders or muted text
-          darkgray: "#C9CDD9",       // Lighter gray for text
-          dark: "#F0F3F8",           // Near-white for high contrast text
-          secondary: "#7B97AA",      // Muted blue/gray accent
-          tertiary: "#A5B7CF",       // Secondary accent (e.g. hover states)
-          highlight: "rgba(165, 183, 207, 0.15)",  // Soft overlay highlight
-          textHighlight: "#A5B7CF88"  // Semi-transparent text highlight
+          light: "#161618",
+          lightgray: "#393639",
+          gray: "#646464",
+          darkgray: "#d4d4d4",
+          dark: "#ebebec",
+          secondary: "#7b97aa",
+          tertiary: "#84a59d",
+          highlight: "#A5B7CF88"
         },
       },
     },
+    locale: "en-US",
   },
   plugins: {
     transformers: [
@@ -66,23 +56,17 @@ const config: QuartzConfig = {
       Plugin.CreatedModifiedDate({
         priority: ["frontmatter", "filesystem"],
       }),
-      Plugin.SyntaxHighlighting({
-        theme: {
-          light: "github-light",
-          dark: "github-dark",
-        },
-        keepBackground: false,
-      }),
+      Plugin.SyntaxHighlighting(),
       Plugin.ObsidianFlavoredMarkdown({ enableInHtmlEmbed: false }),
       Plugin.GitHubFlavoredMarkdown(),
       Plugin.CrawlLinks({ markdownLinkResolution: "shortest" }),
-      Plugin.Description(),
       Plugin.Latex({ renderEngine: "katex" }),
+      Plugin.Description(),
     ],
     filters: [Plugin.RemoveDrafts()],
     emitters: [
       Plugin.AliasRedirects(),
-      Plugin.ComponentResources({ fontOrigin: "googleFonts" }),
+      Plugin.ComponentResources(),
       Plugin.ContentPage(),
       Plugin.FolderPage(),
       Plugin.TagPage(),

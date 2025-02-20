@@ -78,8 +78,52 @@ export interface GlobalConfiguration {
 }
 
 export interface QuartzConfig {
-  configuration: GlobalConfiguration
-  plugins: PluginTypes
+  configuration: {
+    pageTitle: string
+    enableSPA: boolean
+    enablePopovers: boolean
+    analytics: {
+      provider: string
+    }
+    baseUrl?: string
+    ignorePatterns: string[]
+    defaultDateType: string
+    theme: {
+      typography: {
+        header: string
+        body: string
+        code: string
+      }
+      colors: {
+        lightMode: {
+          light: string
+          lightgray: string
+          gray: string
+          darkgray: string
+          dark: string
+          secondary: string
+          tertiary: string
+          highlight: string
+        }
+        darkMode: {
+          light: string
+          lightgray: string
+          gray: string
+          darkgray: string
+          dark: string
+          secondary: string
+          tertiary: string
+          highlight: string
+        }
+      }
+    }
+    locale?: string
+  }
+  plugins: {
+    transformers: any[]
+    filters: any[]
+    emitters: any[]
+  }
 }
 
 export interface FullPageLayout {
