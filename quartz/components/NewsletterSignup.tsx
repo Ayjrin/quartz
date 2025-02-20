@@ -2,189 +2,59 @@ import { QuartzComponentConstructor, QuartzComponentProps } from "./types"
 
 function NewsletterSignupComponent({ cfg }: QuartzComponentProps) {
   return (
-    <div className="newsletter-container">
-      <div className="newsletter-header">
-        <div className="window-controls">
-          <div className="control red"></div>
-          <div className="control yellow"></div>
-          <div className="control green"></div>
-          <span className="window-title">~/subscribe</span>
+    <section className="bg-background/95">
+      <div className="container py-8 md:py-12">
+        <div className="w-full border-primary/20 bg-card/50 p-4 rounded-md">
+          <div className="mb-4 flex items-center gap-2 -mx-4 border-b pb-2">
+            <div className="h-3 w-3 ml-4 rounded-full bg-aurora-red" id="reset-form"></div>
+            <div className="h-3 w-3 rounded-full bg-aurora-yellow"></div>
+            <div className="h-3 w-3 rounded-full bg-aurora-green"></div>
+            <span className="ml-2 text-sm font-bold text-muted-foreground">~/subscribe</span>
+          </div>
+
+          <div className="space-y-4">
+            <div className="font-mono">
+              <span className="text-primary/80">$ </span>
+              <span>Stay updated with my latest projects, blog posts, and maker adventures.</span>
+            </div>
+
+            <form id="newsletter-form" className="flex flex-col sm:flex-row gap-3">
+              <div className="flex-1">
+                <input
+                  type="email"
+                  id="newsletter-email"
+                  placeholder="your@email.com"
+                  className="w-full px-4 py-2 bg-background border rounded-md 
+                    focus:outline-none focus:ring-2 focus:ring-aurora-purple
+                    placeholder:text-muted-foreground/50"
+                />
+              </div>
+              <button
+                type="submit"
+                className="px-6 py-2 font-mono text-sm bg-primary/10 
+                  border border-aurora-purple/20 rounded-md
+                  hover:bg-aurora-purple/20 transition-colors
+                  focus:outline-none focus:ring-2 focus:ring-aurora-purple
+                  disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                $ subscribe
+              </button>
+            </form>
+
+            <div id="status-alert" className="hidden">
+              <div className="rounded-md border px-4 py-3 font-mono font-bold text-md">
+                <div className="flex">
+                  <span className="text-destructive">&gt; </span>
+                  <span id="status-message" className="ml-2"></span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      <div className="newsletter-content">
-        <p className="newsletter-description">
-          <span className="prompt">$ </span>
-          Stay updated with my latest projects, blog posts, and maker adventures.
-        </p>
-        <form className="signup-form">
-          <div className="input-group">
-            <input 
-              type="email" 
-              name="email"
-              id="newsletter-email" 
-              placeholder="your@email.com" 
-              required 
-            />
-            <button type="submit" className="submit-button">$ subscribe</button>
-          </div>
-          <div className="alert hidden">
-            <span className="prompt">&gt; </span>
-            <span id="alert-message"></span>
-            <button type="button" className="close-button">×</button>
-          </div>
-        </form>
-      </div>
-    </div>
+    </section>
   )
 }
-
-NewsletterSignupComponent.css = `
-.newsletter-container {
-  background: var(--lightgray);
-  border: 1px solid var(--lightgray);
-  border-radius: 8px;
-  margin: 2em 0;
-  overflow: hidden;
-  width: 100%;
-}
-
-.newsletter-header {
-  background: var(--lightgray);
-  border-bottom: 1px solid var(--lightgray);
-  padding: 0.75rem;
-}
-
-.window-controls {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.control {
-  height: 12px;
-  width: 12px;
-  border-radius: 50%;
-  cursor: pointer;
-}
-
-.control.red { background: var(--red); }
-.control.yellow { background: var(--yellow); }
-.control.green { background: var(--green); }
-
-.window-title {
-  margin-left: 0.75rem;
-  color: var(--darkgray);
-  font-family: var(--codeFont);
-  font-size: 0.9em;
-}
-
-.newsletter-content {
-  padding: 1.5rem;
-}
-
-.newsletter-description {
-  color: var(--darkgray);
-  font-family: var(--codeFont);
-  font-size: 0.9em;
-  margin-bottom: 1.5rem;
-}
-
-.prompt {
-  color: var(--secondary);
-}
-
-.signup-form {
-  width: 100%;
-}
-
-.input-group {
-  display: flex;
-  gap: 8px;
-  width: 100%;
-}
-
-#newsletter-email {
-  background: var(--light);
-  border: 1px solid var(--lightgray);
-  border-radius: 4px;
-  color: var(--darkgray);
-  flex: 1;
-  font-family: var(--codeFont);
-  font-size: 0.9em;
-  padding: 8px 12px;
-  transition: all 0.2s ease;
-}
-
-#newsletter-email:focus {
-  border-color: var(--secondary);
-  outline: none;
-}
-
-#newsletter-email::placeholder {
-  color: var(--darkgray);
-  opacity: 0.5;
-}
-
-.submit-button {
-  background: var(--secondary);
-  border: none;
-  border-radius: 4px;
-  color: var(--light);
-  cursor: pointer;
-  font-family: var(--codeFont);
-  font-size: 0.9em;
-  padding: 8px 16px;
-  transition: all 0.2s ease;
-  white-space: nowrap;
-}
-
-.submit-button:hover {
-  opacity: 0.9;
-}
-
-.submit-button:disabled {
-  background: var(--gray);
-  cursor: not-allowed;
-  opacity: 0.7;
-}
-
-.alert {
-  align-items: center;
-  background: var(--secondary);
-  border-radius: 4px;
-  color: var(--light);
-  display: flex;
-  font-family: var(--codeFont);
-  font-size: 0.9em;
-  gap: 8px;
-  justify-content: space-between;
-  margin-top: 1rem;
-  padding: 8px 12px;
-}
-
-.alert.error {
-  background: var(--red);
-}
-
-.alert.hidden {
-  display: none;
-}
-
-.close-button {
-  background: none;
-  border: none;
-  color: inherit;
-  cursor: pointer;
-  font-size: 1.2em;
-  padding: 0;
-  opacity: 0.8;
-  transition: opacity 0.2s;
-}
-
-.close-button:hover {
-  opacity: 1;
-}
-`
 
 NewsletterSignupComponent.beforeDOMLoaded = `
 const script = document.createElement('script')
@@ -193,14 +63,30 @@ document.head.appendChild(script)
 `
 
 NewsletterSignupComponent.afterDOMLoaded = `
-const form = document.querySelector('.signup-form')
+const form = document.getElementById('newsletter-form')
 const emailInput = document.getElementById('newsletter-email')
-const alert = document.querySelector('.alert')
-const alertMessage = document.getElementById('alert-message')
-const submitButton = document.querySelector('.submit-button')
+const statusAlert = document.getElementById('status-alert')
+const statusMessage = document.getElementById('status-message')
+const submitButton = form?.querySelector('button[type="submit"]')
+const resetButton = document.getElementById('reset-form')
 let isSubmitting = false
 
-if (!form || !emailInput || !alert || !alertMessage || !submitButton) return
+if (!form || !emailInput || !statusAlert || !statusMessage || !submitButton || !resetButton) return
+
+const setStatus = (type, message) => {
+  statusAlert.classList.remove('hidden')
+  statusAlert.className = 'rounded-md border px-4 py-3 font-mono font-bold text-md ' + 
+    (type === 'error' ? 'border-destructive/50 text-destructive' : 'border-border bg-background')
+  statusMessage.textContent = message
+}
+
+const handleReset = () => {
+  emailInput.value = ''
+  statusAlert.classList.add('hidden')
+  submitButton.disabled = false
+  submitButton.textContent = '$ subscribe'
+  isSubmitting = false
+}
 
 form.addEventListener('submit', async function(e) {
   e.preventDefault()
@@ -232,14 +118,11 @@ form.addEventListener('submit', async function(e) {
 
     if (error) throw error
 
-    alert.classList.remove('hidden', 'error')
-    alertMessage.textContent = 'Really?? You want to get my opinions and thoughts? Ok... bet.'
+    setStatus('success', 'Really?? You want to get my opinions and thoughts? Ok... bet.')
     emailInput.value = ''
   } catch (error) {
     console.error('Error:', error)
-    alert.classList.remove('hidden')
-    alert.classList.add('error')
-    alertMessage.textContent = error instanceof Error ? error.message : 'Something went wrong'
+    setStatus('error', error instanceof Error ? error.message : 'Something went wrong')
   } finally {
     isSubmitting = false
     submitButton.disabled = false
@@ -247,14 +130,7 @@ form.addEventListener('submit', async function(e) {
   }
 })
 
-document.querySelector('.close-button').addEventListener('click', function() {
-  emailInput.value = ''
-  alert.classList.add('hidden')
-  alert.classList.remove('error')
-  alertMessage.textContent = ''
-  submitButton.disabled = false
-  submitButton.textContent = '$ subscribe'
-})
+resetButton.addEventListener('click', handleReset)
 `
 
 export { NewsletterSignupComponent }

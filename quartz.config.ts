@@ -57,6 +57,7 @@ const config: QuartzConfig = {
   plugins: {
     transformers: [
       Plugin.FrontMatter(),
+      Plugin.TableOfContents(),
       Plugin.CreatedModifiedDate({
         priority: ["frontmatter", "filesystem"],
       }),
@@ -69,7 +70,6 @@ const config: QuartzConfig = {
       }),
       Plugin.ObsidianFlavoredMarkdown({ enableInHtmlEmbed: false }),
       Plugin.GitHubFlavoredMarkdown(),
-      Plugin.TableOfContents(),
       Plugin.CrawlLinks({ markdownLinkResolution: "shortest" }),
       Plugin.Description(),
       Plugin.Latex({ renderEngine: "katex" }),
@@ -88,6 +88,33 @@ const config: QuartzConfig = {
       Plugin.Assets(),
       Plugin.Static(),
       Plugin.NotFoundPage(),
+      {
+        name: "Tailwind",
+        getQuartzComponents() {
+          return []
+        },
+        async emit({ argv, cfg, content, ctx }) {
+          // Process Tailwind CSS
+          const postcss = require('postcss')
+          const tailwindcss = require('tailwindcss')
+          const autoprefixer = require('autoprefixer')
+          const fs = require('fs/promises')
+          
+          const css = await fs.readFile('./quartz/styles/tailwind.css', 'utf8')
+          const result = await postcss([
+            tailwindcss,
+            autoprefixer,
+          ]).process(css, {
+            from: './quartz/styles/tailwind.css',
+            to: './public/styles/tailwind.css'
+          })
+
+          await fs.mkdir('./public/styles', { recursive: true })
+          await fs.writeFile('./public/styles/tailwind.css', result.css)
+          
+          return []
+        },
+      },
     ],
   },
 }
