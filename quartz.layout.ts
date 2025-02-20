@@ -2,7 +2,7 @@ import { PageLayout, SharedLayout } from "./quartz/cfg"
 import * as Component from "./quartz/components"
 
 // components shared between all pages
-export const sharedLayout: SharedLayout = {
+export const sharedPageComponents: SharedLayout = {
   head: Component.Head,
   header: [
     Component.PageTitle,
@@ -15,7 +15,7 @@ export const sharedLayout: SharedLayout = {
 }
 
 // components for pages that display a single page (e.g. a single note)
-export const defaultLayout: PageLayout = {
+export const defaultContentPageLayout: PageLayout = {
   beforeBody: [
     Component.Breadcrumbs,
     Component.ArticleTitle,
@@ -37,7 +37,7 @@ export const defaultLayout: PageLayout = {
 }
 
 // components for pages that display lists of pages  (e.g. tags or folders)
-export const defaultListLayout: PageLayout = {
+export const defaultListPageLayout: PageLayout = {
   beforeBody: [Component.Breadcrumbs, Component.ArticleTitle, Component.ContentMeta],
   left: [
     Component.PageTitle,
