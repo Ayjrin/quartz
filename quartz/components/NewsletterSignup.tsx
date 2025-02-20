@@ -1,39 +1,43 @@
 import { QuartzComponentConstructor, QuartzComponentProps } from "./types"
+import { YoinkName } from './Creep'
 
-const NewsletterSignupComponent = ({ cfg }: QuartzComponentProps) => {
+function NewsletterSignupComponent({ cfg }: QuartzComponentProps) {
   return (
-    <section class="newsletter-signup">
-      <div class="container">
-        <div class="signup-card">
-          <div class="window-controls">
-            <div class="control red"></div>
-            <div class="control yellow"></div>
-            <div class="control green"></div>
-            <span class="window-title">~/subscribe</span>
+    <section className="newsletter-signup">
+      <div className="container">
+        <div className="signup-card">
+          <div className="window-controls">
+            <div className="control red"></div>
+            <div className="control yellow"></div>
+            <div className="control green"></div>
+            <span className="window-title">~/subscribe</span>
           </div>
 
-          <div class="content">
-            <div class="description">
-              <span class="prompt">$ </span>
+          <div className="content">
+            <div className="description">
+              <span className="prompt">$ </span>
               <span>Stay updated with my latest projects, blog posts, and maker adventures.</span>
             </div>
 
-            <form id="newsletter-form" class="signup-form">
-              <div class="input-wrapper">
+            <form className="signup-form">
+              <div className="input-wrapper">
                 <input
                   type="email"
-                  id="signup-email"
                   placeholder="your@email.com"
-                  class="email-input"
+                  className="email-input"
+                  id="newsletter-email"
                 />
               </div>
-              <button type="submit" class="submit-button">
+              <button
+                type="submit"
+                className="submit-button"
+              >
                 $ subscribe
               </button>
             </form>
 
-            <div id="signup-alert" class="alert hidden">
-              <span class="prompt">&gt; </span>
+            <div className="alert hidden">
+              <span className="prompt">&gt; </span>
               <span id="alert-message"></span>
             </div>
           </div>
@@ -119,8 +123,8 @@ NewsletterSignupComponent.css = `
   padding: 0.5rem 1rem;
   background: var(--light);
   border: 1px solid var(--lightgray);
-  border-radius: 0.25rem;
-  font-family: var(--bodyFont);
+  border-radius: 0.375rem;
+  font-family: var(--codeFont);
 }
 
 .email-input:focus {
@@ -129,19 +133,33 @@ NewsletterSignupComponent.css = `
   box-shadow: 0 0 0 2px rgba(var(--secondary), 0.2);
 }
 
+.email-input::placeholder {
+  color: var(--darkgray);
+  opacity: 0.5;
+}
+
+.email-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .submit-button {
   padding: 0.5rem 1.5rem;
   font-family: var(--codeFont);
   font-size: 0.875rem;
   background: rgba(var(--secondary), 0.1);
   border: 1px solid rgba(var(--secondary), 0.2);
-  border-radius: 0.25rem;
-  cursor: pointer;
-  transition: background 0.2s;
+  border-radius: 0.375rem;
+  transition: background-color 0.2s;
 }
 
 .submit-button:hover {
   background: rgba(var(--secondary), 0.2);
+}
+
+.submit-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(var(--secondary), 0.2);
 }
 
 .submit-button:disabled {
@@ -153,70 +171,82 @@ NewsletterSignupComponent.css = `
   font-family: var(--codeFont);
   font-weight: bold;
   padding: 0.75rem;
-  border-radius: 0.25rem;
+  border-radius: 0.375rem;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
 }
 
 .alert.error {
   background: rgba(var(--red), 0.1);
-  color: var(--red);
+  border-color: var(--red);
 }
 
-.alert.success {
-  background: rgba(var(--green), 0.1);
-  color: var(--green);
-}
-
-.hidden {
+.alert.hidden {
   display: none;
 }
 `
 
+NewsletterSignupComponent.beforeDOMLoaded = `
+const script = document.createElement('script')
+script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2'
+document.head.appendChild(script)
+`
+
 NewsletterSignupComponent.afterDOMLoaded = `
-document.addEventListener('nav', function() {
-  const form = document.getElementById('newsletter-form')
-  const emailInput = document.getElementById('signup-email')
-  const alert = document.getElementById('signup-alert')
+// Wait for Supabase script to load
+const checkSupabase = setInterval(() => {
+  if (window.supabase) {
+    clearInterval(checkSupabase)
+    initializeNewsletter()
+  }
+}, 100)
+
+function initializeNewsletter() {
+  const form = document.querySelector('.signup-form')
+  const emailInput = document.getElementById('newsletter-email')
+  const alert = document.querySelector('.alert')
   const alertMessage = document.getElementById('alert-message')
+  const submitButton = document.querySelector('.submit-button')
   let isSubmitting = false
 
-  if (!form || !emailInput || !alert || !alertMessage) return
+  if (!form || !emailInput || !alert || !alertMessage || !submitButton) return
 
   form.addEventListener('submit', async function(e) {
     e.preventDefault()
     if (isSubmitting) return
 
     isSubmitting = true
-    const submitButton = form.querySelector('button')
-    if (submitButton) submitButton.disabled = true
+    submitButton.disabled = true
+    submitButton.textContent = '$ sending...'
     
     try {
-      const response = await fetch('/api/subscribe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: emailInput.value }),
-      })
+      const result = await YoinkName(emailInput.value)
+      if (!result.success) throw result.error
 
-      const data = await response.json()
-      
-      alert.classList.remove('hidden', 'error', 'success')
-      if (!response.ok) {
-        alert.classList.add('error')
-        alertMessage.textContent = data.error || 'Something went wrong'
-      } else {
-        alert.classList.add('success')
-        alertMessage.textContent = data.message || 'Thanks! Please check your email to confirm.'
-        emailInput.value = ''
-      }
+      alert.classList.remove('hidden', 'error')
+      alertMessage.textContent = 'Really?? You want to get my opinions and thoughts? Ok... bet.'
+      emailInput.value = ''
     } catch (error) {
+      console.error('Error:', error)
       alert.classList.remove('hidden')
       alert.classList.add('error')
-      alertMessage.textContent = 'Something went wrong'
+      alertMessage.textContent = error instanceof Error ? error.message : 'Something went wrong'
     } finally {
       isSubmitting = false
-      if (submitButton) submitButton.disabled = false
+      submitButton.disabled = false
+      submitButton.textContent = '$ subscribe'
     }
   })
-})
+
+  document.querySelector('.control.red').addEventListener('click', function() {
+    emailInput.value = ''
+    alert.classList.add('hidden')
+    alert.classList.remove('error')
+    alertMessage.textContent = ''
+    submitButton.disabled = false
+    submitButton.textContent = '$ subscribe'
+  })
+}
 `
 
 export default (() => NewsletterSignupComponent) satisfies QuartzComponentConstructor

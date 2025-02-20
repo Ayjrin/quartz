@@ -35,10 +35,12 @@
     "quartz": "./quartz/bootstrap-cli.mjs"
   },
   "dependencies": {
+    "@browserbasehq/stagehand": "^1.12.0",
     "@clack/prompts": "^0.10.0",
     "@floating-ui/dom": "^1.6.13",
     "@myriaddreamin/rehype-typst": "^0.5.4",
     "@napi-rs/simple-git": "0.1.19",
+    "@supabase/supabase-js": "^2.48.1",
     "@tailwindcss/cli": "^4.0.6",
     "@tweenjs/tween.js": "^25.0.0",
     "async-mutex": "^0.5.0",
@@ -99,7 +101,8 @@
     "vfile": "^6.0.3",
     "workerpool": "^9.2.0",
     "ws": "^8.18.0",
-    "yargs": "^17.7.2"
+    "yargs": "^17.7.2",
+    "zod": "^3.24.2"
   },
   "devDependencies": {
     "@types/cli-spinner": "^0.2.3",
