@@ -1,5 +1,10 @@
 import { QuartzConfig } from "./quartz/cfg"
 import * as Plugin from "./quartz/plugins"
+import { Tailwind } from "./quartz/plugins/emitters/tailwind"
+import postcss from 'postcss'
+import tailwindcss from 'tailwindcss'
+import autoprefixer from 'autoprefixer'
+import fs from 'fs/promises'
 
 /**
  * Quartz 4.0 Configuration
@@ -77,7 +82,7 @@ const config: QuartzConfig = {
     filters: [Plugin.RemoveDrafts()],
     emitters: [
       Plugin.AliasRedirects(),
-      Plugin.ComponentResources(),
+      Plugin.ComponentResources({ fontOrigin: "googleFonts" }),
       Plugin.ContentPage(),
       Plugin.FolderPage(),
       Plugin.TagPage(),
@@ -87,34 +92,7 @@ const config: QuartzConfig = {
       }),
       Plugin.Assets(),
       Plugin.Static(),
-      Plugin.NotFoundPage(),
-      {
-        name: "Tailwind",
-        getQuartzComponents() {
-          return []
-        },
-        async emit({ argv, cfg, content, ctx }) {
-          // Process Tailwind CSS
-          const postcss = require('postcss')
-          const tailwindcss = require('tailwindcss')
-          const autoprefixer = require('autoprefixer')
-          const fs = require('fs/promises')
-          
-          const css = await fs.readFile('./quartz/styles/tailwind.css', 'utf8')
-          const result = await postcss([
-            tailwindcss,
-            autoprefixer,
-          ]).process(css, {
-            from: './quartz/styles/tailwind.css',
-            to: './public/styles/tailwind.css'
-          })
-
-          await fs.mkdir('./public/styles', { recursive: true })
-          await fs.writeFile('./public/styles/tailwind.css', result.css)
-          
-          return []
-        },
-      },
+      Tailwind(),
     ],
   },
 }
