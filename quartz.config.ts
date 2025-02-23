@@ -46,8 +46,8 @@ const config: QuartzConfig = {
           gray: "#646464",
           darkgray: "#d4d4d4",
           dark: "#aab9bc", // title 
-          secondary: "#ff00ff",
-          tertiary: "#9bd3d5",
+          secondary: "##2e3b48", // Ayjrin at the top and socials at the bottom
+          tertiary: "#ff00ff",
           highlight: "rgba(143, 159, 169, 0.15)",
           textHighlight: "#b3aa0288",
         },
