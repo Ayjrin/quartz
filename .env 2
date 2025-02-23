@@ -1,0 +1,9 @@
+# OpenAI API Key (required)
+OPENAI_API_KEY=${process.env.OPENAI_API_KEY}
+
+# Browserbase credentials (required)
+BROWSERBASE_API_KEY=${process.env.BROWSERBASE_API_KEY}
+BROWSERBASE_PROJECT_ID=${process.env.BROWSERBASE_PROJECT_ID}
+
+# Model configuration
+DEFAULT_MODEL=gpt-4o
